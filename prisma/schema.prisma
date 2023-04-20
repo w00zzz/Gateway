@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:dev.db"
+}
+
+model Gateways {
+  serial_number      String    @id @unique
+  name               String    @unique
+  ipv4_address       String    @unique
+  address_validation Boolean   @default(false)
+  associated_devices Devices[]
+}
+
+model Devices {
+  uid                   Int       @id @unique @default(autoincrement())
+  vendor                String
+  date                  DateTime  @default(now())
+  connected             Boolean   @default(false)
+  Gateways              Gateways? @relation(fields: [gatewaysSerial_number], references: [serial_number])
+  gatewaysSerial_number String?
+}
